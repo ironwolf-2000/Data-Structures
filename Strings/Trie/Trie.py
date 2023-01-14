@@ -8,16 +8,33 @@ class TrieNode:
 
 
 class Trie:
+    """
+    n = number of added words
+    W = sum(len(words[i])), 0 <= i < n
+    -------------
+    Space: O(W)
+    """
+
     def __init__(self) -> None:
         self.root = TrieNode()
 
     def insert(self, word: str) -> None:
+        """
+        N = len(word)
+        -------------
+        Time: O(N)
+        """
         node = self.root
         for ch in word:
             node = node.children[ch]
         node.is_word = True
 
     def search(self, word: str) -> bool:
+        """
+        N = len(word)
+        -------------
+        Time: O(N)
+        """
         node = self.root
         for ch in word:
             if ch not in node.children:
@@ -26,6 +43,11 @@ class Trie:
         return node.is_word
 
     def startsWith(self, prefix: str) -> bool:
+        """
+        N = len(prefix)
+        -------------
+        Time: O(N)
+        """
         node = self.root
         for ch in prefix:
             if ch not in node.children:
@@ -34,6 +56,12 @@ class Trie:
         return True
 
     def remove(self, word: str) -> None:
+        """
+        N = len(word)
+        -------------
+        Time: O(N)
+        Extra Space: O(N)
+        """
         self._remove(self.root, word, 0)
 
     def _remove(self, node: TrieNode, word: str, i: int) -> None:
@@ -52,13 +80,15 @@ class Trie:
             del node.children[ch]
 
 
-t = Trie()
+trie = Trie()
 
-t.insert("abc")
-t.insert("ab")
-t.insert("ad")
-t.insert("xy")
+trie.insert("abc")
+trie.insert("ab")
+trie.insert("ad")
+trie.insert("xy")
 
-t.remove("abc")
+# Removes the letter "c" from the trie but keeps "a" and "b" because "b" is the end of the word "ab".
+trie.remove("abc")
 
-print(t)
+# Removes both "x" and "y" from the trie.
+trie.remove("xy")

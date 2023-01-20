@@ -1,4 +1,4 @@
-# Note: alpha here refers to the Inverse Ackermann function.
+# Note: `a` refers to the inverse Ackermann function.
 
 
 class UnionFind:
@@ -12,30 +12,30 @@ class UnionFind:
 
     def find(self, x: int) -> int:
         """
-        Time: O(alpha(N))
+        Time: O(a(N))
         """
         if x != self.root[x]:
             self.root[x] = self.find(self.root[x])
         return self.root[x]
 
-    def unite(self, x: int, y: int) -> None:
+    def union(self, x: int, y: int) -> None:
         """
-        Time: O(alpha(N))
+        Time: O(1)
         """
-        root_x = self.find(x)
-        root_y = self.find(y)
+        x_root = self.find(x)
+        y_root = self.find(y)
 
-        if root_x != root_y:
-            if self.rank[root_x] < self.rank[root_y]:
-                self.root[root_x] = root_y
-            elif self.rank[root_x] > self.rank[root_y]:
-                self.root[root_y] = root_x
+        if x_root != y_root:
+            if self.rank[x_root] < self.rank[y_root]:
+                self.root[x_root] = y_root
+            elif self.rank[y_root] < self.rank[x_root]:
+                self.root[y_root] = x_root
             else:
-                self.root[root_x] = root_y
-                self.rank[root_y] += 1
+                self.root[x_root] = y_root
+                self.rank[y_root] += 1
 
     def connected(self, x: int, y: int) -> bool:
         """
-        Time: O(alpha(N))
+        Time: O(a(N))
         """
         return self.find(x) == self.find(y)

@@ -1,14 +1,15 @@
 from collections import deque
+import operator
 
 
 class MonotonicQueue:
-    @staticmethod
-    def windowMax(nums: list[int], k: int) -> list[int]:
+    def _helper(nums: list[int], k: int, window_min: bool) -> list[int]:
+        comp = operator.ge if window_min else operator.le
         dq = deque()
         res = []
 
         for i, el in enumerate(nums):
-            while dq and nums[dq[-1]] <= el:
+            while dq and comp(nums[dq[-1]], el):
                 dq.pop()
 
             dq.append(i)
@@ -20,19 +21,26 @@ class MonotonicQueue:
 
         return res
 
+    @staticmethod
+    def windowMax(nums: list[int], k: int) -> list[int]:
+        return MonotonicQueue._helper(nums, k, False)
 
-# Example from https://leetcode.com/problems/sliding-window-maximum/description/
+    @staticmethod
+    def windowMin(nums: list[int], k: int) -> list[int]:
+        return MonotonicQueue._helper(nums, k, True)
 
-# Window position                Max
-# ---------------               -----
-# [1  3  -1] -3  5  3  6  7       3
-#  1 [3  -1  -3] 5  3  6  7       3
-#  1  3 [-1  -3  5] 3  6  7       5
-#  1  3  -1 [-3  5  3] 6  7       5
-#  1  3  -1  -3 [5  3  6] 7       6
-#  1  3  -1  -3  5 [3  6  7]      7
 
-nums = [1, 3, -1, -3, 5, 3, 6, 7]
+# Window position                Max     Min
+# ---------------               -----   -----
+# [1  3  9] 2  5  3  6  2         9       1
+#  1 [3  9  2] 5  3  6  2         9       2
+#  1  3 [9  2  5] 3  6  2         9       2
+#  1  3  9 [2  5  3] 6  2         5       2
+#  1  3  9  2 [5  3  6] 2         6       3
+#  1  3  9  2  5 [3  6  2]        6       2
+
+nums = [1, 3, 9, 2, 5, 3, 6, 2]
 k = 3
 
-print(MonotonicQueue.windowMax(nums, k))  # [3, 3, 5, 5, 6, 7]
+print(MonotonicQueue.windowMax(nums, k))  # [9, 9, 9, 5, 6, 6]
+print(MonotonicQueue.windowMin(nums, k))  # [1, 2, 2, 2, 3, 2]
